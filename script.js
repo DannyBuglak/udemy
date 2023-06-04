@@ -51,7 +51,25 @@ const factsList = document.querySelector(".facts-list");
 // Create DOM elements: Render facts in list
 factsList.innerHTML = "";
 
-createFactsList(initialFacts);
+// Load data from Supabase
+loadFacts();
+
+async function loadFacts() {
+  const res = await fetch(
+    "https://shgugfiuqueuhfymqimq.supabase.co/rest/v1/facts",
+    {
+      headers: {
+        apikey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoZ3VnZml1cXVldWhmeW1xaW1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU3Mjc1OTIsImV4cCI6MjAwMTMwMzU5Mn0.RY-E1altJp5bbUMN7NW8DcH_JztBAc5gQTt6B_Le0mc",
+        authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoZ3VnZml1cXVldWhmeW1xaW1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU3Mjc1OTIsImV4cCI6MjAwMTMwMzU5Mn0.RY-E1altJp5bbUMN7NW8DcH_JztBAc5gQTt6B_Le0mc",
+      },
+    }
+  );
+  const data = await res.json();
+
+  createFactsList(data);
+}
 
 function createFactsList(dataArray) {
   const htmlArr = dataArray.map(
@@ -64,7 +82,9 @@ function createFactsList(dataArray) {
                   target="_blank"
               >(Source)</a>
           </p>
-          <span class="tag" style="background-color: #3b82f6"
+          <span class="tag" style="background-color: ${
+            CATEGORIES.find((cat) => cat.name === fact.category).color
+          }"
           >${fact.category}</span
           ></li>`
   );
